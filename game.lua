@@ -1,3 +1,5 @@
+local Camera = require("Camera")
+
 local Map = require("map")
 local Player = require("player")
 
@@ -26,6 +28,10 @@ function game:init()
 
   self.map = Map()
 
+  self.camera = Camera(0, 0, 800, 600)
+  self.camera:setFollowStyle('TOPDOWN_TIGHT')
+  self.camera:setBounds(0, 0, self.map:getWidth(), self.map:getHeight())
+
   local playerStart = self.map:getPlayerStartPosition()
 
   print(self.map:getWorld())
@@ -47,6 +53,9 @@ end
 function game:update(dt)
   self.map:update(dt)
   self.player:update(dt)
+
+  self.camera:update(dt)
+  self.camera:follow(self.player:getX(), self.player:getY())
 end
 
 function game:draw()
@@ -57,8 +66,10 @@ function game:draw()
   love.graphics.setColor(1, 1, 1)
 
   -- Draw game
+  self.camera:attach()
   self.map:draw()
   self.player:draw()
+  self.camera:detach()
   
   love.graphics.pop()
 

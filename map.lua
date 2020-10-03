@@ -8,7 +8,9 @@ local Map = Class{
     self.data = data
 
     -- Create a canvas so not having to redraw the tiles each frame
-    self.canvas = love.graphics.newCanvas(data.width * 16, data.height * 16)
+    self.width = data.width * 16
+    self.height = data.height * 16
+    self.canvas = love.graphics.newCanvas(width, height)
 
     -- Setup the world for physics
     love.physics.setMeter(32)
@@ -46,6 +48,14 @@ local Map = Class{
   hasCanvas = false,
   playerStartPosition = {x = 0, y = 0},
 }
+
+function Map:getWidth() 
+  return self.width
+end
+
+function Map:getHeight() 
+  return self.height
+end
 
 function Map:getWorld() 
   return self.world

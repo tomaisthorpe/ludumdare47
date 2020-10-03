@@ -15,6 +15,14 @@ local Player = Class{
   speed = 3000,
 }
 
+function Player:getX() 
+  return self.object:getX()
+end
+
+function Player:getY() 
+  return self.object:getY()
+end
+
 function Player:update(dt)
   if love.keyboard.isDown('left') or love.keyboard.isDown('a') then
     self.object:applyForce(-self.speed * self.object:getMass(), 0)
