@@ -19,6 +19,7 @@ game = {
   },
   wave = 1,
   waveSpawnComplete = false,
+  lives = 10,
 }
 
 function game:calculateScaling()
@@ -62,6 +63,13 @@ function game:keypressed(key)
   end
 end
 
+function game:removeLife()
+  self.lives = self.lives - 1
+  if self.lives < 0 then
+    self.lives = 0
+  end
+end
+
 function game:mousepressed(x, y, button)
   if button ~= 1 then
     return
@@ -93,6 +101,7 @@ end
 
 function game:spawnEnemyAt(spawner)
   table.insert(self.enemies, Enemy(
+    self,
     self.map,
     spawner.x,
     spawner.y
@@ -179,8 +188,10 @@ function game:drawUI()
   if self.phase == "build" then
     -- Draw the start button
     love.graphics.setColor(0, 0, 1)
-    love.graphics.rectangle("fill", 800 - 110, 600 - 60, 100, 50)
+    love.graphics.rectangle("fill", self.startButton.x1, self.startButton.y1, self.startButton.x2 - self.startButton.x1, self.startButton.y2 - self.startButton.y1)
   end
 
+  love.graphics.setColor(1, 0, 0)
+  love.graphics.printf(self.lives, 10, 10, 100, "left")
   love.graphics.pop()
 end

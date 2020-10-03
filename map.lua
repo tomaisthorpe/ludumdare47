@@ -293,6 +293,7 @@ function Map:draw()
   for r=1, #grid, 1 do
     for c=1, #grid[r], 1 do
       local node = self.finder:getGrid():getNodeAt(c, r)
+      love.graphics.setColor(255, 255, 255)
       love.graphics.printf(node:getClearance(0), (c - 1) * 16, (r - 1) * 16, 16, "center", 0, 0.5, 0.5)
     end
   end

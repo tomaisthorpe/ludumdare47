@@ -1,7 +1,8 @@
 local Class = require 'hump.class'
 
 local Enemy = Class{
-  init = function(self, map, x, y)
+  init = function(self, game, map, x, y)
+    self.game = game
     self.map = map
     self.world = map:getWorld()
 
@@ -115,6 +116,7 @@ function Enemy:update(dt)
   local goal = self.map.goal
   local distance = math.sqrt(((goal.x - self:getX()) ^ 2) + ((goal.y - self:getY()) ^ 2))
   if distance < 16 then
+    self.game:removeLife()
     self.dead = true
   end
 
