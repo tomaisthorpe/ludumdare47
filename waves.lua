@@ -35,7 +35,7 @@ function WaveController:update(dt)
     self.spawnedEnemies = self.spawnedEnemies + 1
 
     if self.spawnedEnemies == self.totalEnemies then
-      self.game:waveSpawnComplete()
+      self.game:waveComplete()
     end
 
     self.lastSpawn = 0

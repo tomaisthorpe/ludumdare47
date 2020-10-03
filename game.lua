@@ -11,6 +11,14 @@ game = {
   phase = "build",
   lastSpawn = 0,
   enemies = {},
+  startButton = {
+    x1 = 800 - 110,
+    y1 = 600 - 60,
+    x2 = 800 - 10,
+    y2 = 600 - 10,
+  },
+  wave = 1,
+  waveSpawnComplete = false,
 }
 
 function game:calculateScaling()
@@ -41,7 +49,6 @@ function game:init()
 
   self.player = Player(self.map:getWorld(), playerStart.x, playerStart.y)
   self.waveGen = WaveGen(self, self.map.spawners)
-  self.waveGen:startWave(1)
 end
 
 function game:resize()
@@ -60,12 +67,27 @@ function game:mousepressed(x, y, button)
     return
   end
 
-  local mx, my = self:getMousePosition()
+  local mx, my, cx, cy = self:getMousePosition()
 
   if self.phase == "build" then
-    if self.map:canBuild(mx, my) then
-      self.map:addTrap(mx, my)
+    local button = self.startButton
+    -- Check if the user pressed on the start button
+    if mx >= button.x1 and mx <= button.x2 and my >= button.y1 and my <= button.y2 then
+      self:startPhase("defend")
+      return
     end
+
+    if self.map:canBuild(cx, cy) then
+      self.map:addTrap(cx, cy)
+    end
+  end
+end
+
+function game:startPhase(phase)
+  self.phase = phase
+  if phase == "defend" then
+    self.waveSpawnComplete = false
+    self.waveGen:startWave(self.wave)
   end
 end
 
@@ -77,7 +99,7 @@ function game:spawnEnemyAt(spawner)
   ))
 end
 
-function game:waveSpawnComplete()
+function game:waveComplete()
   self.waveSpawnComplete = true
 end
 
@@ -89,6 +111,12 @@ function game:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
 
   self.waveGen:update(dt)
+
+  -- check if the wave is over
+  if self.phase == "defend" and self.waveSpawnComplete and #self.enemies == 0 then
+    self.wave = self.wave + 1
+    self:startPhase("build")
+  end
 
   for i, e in ipairs(self.enemies) do
     if e.dead then
@@ -108,7 +136,7 @@ function game:getMousePosition()
 
   local cx, cy = self.camera:toWorldCoords(mx, my)
 
-  return cx, cy
+  return mx, my, cx, cy
 end
 
 function game:draw()
@@ -132,10 +160,27 @@ function game:draw()
   
   love.graphics.pop()
 
+  game:drawUI()
+
   -- -- Draw borders
   love.graphics.setColor(conf.borderColor[1], conf.borderColor[2], conf.borderColor[3])
   love.graphics.rectangle("fill", 0, 0, game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), game.translate[2])
   love.graphics.rectangle("fill", love.graphics.getWidth() - game.translate[1], 0, game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, love.graphics.getHeight() - game.translate[2], love.graphics.getWidth(), game.translate[2])
+end
+
+function game:drawUI() 
+  love.graphics.push()
+  love.graphics.translate(game.translate[1], game.translate[2])
+  love.graphics.scale(game.scaling)
+  love.graphics.setColor(1, 1, 1)
+
+  if self.phase == "build" then
+    -- Draw the start button
+    love.graphics.setColor(0, 0, 1)
+    love.graphics.rectangle("fill", 800 - 110, 600 - 60, 100, 50)
+  end
+
+  love.graphics.pop()
 end
