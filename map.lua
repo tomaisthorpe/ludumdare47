@@ -14,6 +14,7 @@ local Map = Class{
     love.physics.setMeter(32)
     self.world = wf.newWorld(0, 0, true)
     self.world:addCollisionClass('Solid')
+    self.world:addCollisionClass('Player')
 
     -- Load the tiles
     self.tiles = {}
@@ -40,9 +41,19 @@ local Map = Class{
 
     self.colliders = {}
     self:updateColliders()
+    self:updateObjects()
   end,
-  hasCanvas = false
+  hasCanvas = false,
+  playerStartPosition = {x = 0, y = 0},
 }
+
+function Map:getWorld() 
+  return self.world
+end
+
+function Map:getPlayerStartPosition() 
+  return self.playerStartPosition
+end
 
 function Map:updateColliders()
   -- Destory existing coliders
@@ -63,6 +74,23 @@ function Map:updateColliders()
 
           collider:setType('static')
           table.insert(self.colliders, collider)
+        end
+      end
+    end
+  end
+end
+
+function Map:updateObjects()
+  for l = 1, #self.data.layers, 1 do
+    local layer = self.data.layers[l]
+    if layer.type == "objectgroup" then
+      for o=1, #layer.objects, 1 do
+        local object = layer.objects[o]
+        if object.type == "playerStart" then
+          self.playerStartPosition = {
+            x = object.x,
+            y = object.y,
+          }
         end
       end
     end
@@ -108,6 +136,8 @@ function Map:update(dt)
   if self.hasCanvas == false then
     self:updateCanvas()
   end
+
+  self.world:update(dt)
 end
 
 function Map:draw()

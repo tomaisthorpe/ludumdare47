@@ -135,7 +135,9 @@ return {
       opacity = 1,
       offsetx = 0,
       offsety = 0,
-      properties = {},
+      properties = {
+        ["isCollision"] = true
+      },
       objects = {
         {
           id = 2,
@@ -304,7 +306,9 @@ return {
           height = 192,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["isCollision"] = true
+          }
         }
       }
     }

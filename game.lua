@@ -1,4 +1,5 @@
 local Map = require("map")
+local Player = require("player")
 
 game = {
   translate = {0, 0},
@@ -24,6 +25,12 @@ function game:init()
   game:calculateScaling()
 
   self.map = Map()
+
+  local playerStart = self.map:getPlayerStartPosition()
+
+  print(self.map:getWorld())
+
+  self.player = Player(self.map:getWorld(), playerStart.x, playerStart.y)
 end
 
 function game:resize()
@@ -39,6 +46,7 @@ end
 
 function game:update(dt)
   self.map:update(dt)
+  self.player:update(dt)
 end
 
 function game:draw()
@@ -50,6 +58,7 @@ function game:draw()
 
   -- Draw game
   self.map:draw()
+  self.player:draw()
   
   love.graphics.pop()
 

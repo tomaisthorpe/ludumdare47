@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="15">
+ <editorsettings>
+  <export target="mapdata.lua" format="lua"/>
+ </editorsettings>
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="Tile Layer 1" width="80" height="40">
   <data encoding="csv">
@@ -54,6 +57,9 @@
   </object>
  </objectgroup>
  <objectgroup id="3" name="Collisions">
+  <properties>
+   <property name="isCollision" type="bool" value="true"/>
+  </properties>
   <object id="2" x="0" y="0" width="1280" height="16"/>
   <object id="3" x="1264" y="16" width="16" height="624"/>
   <object id="4" x="0" y="624" width="1264" height="16"/>
@@ -66,6 +72,10 @@
   <object id="11" x="688" y="176" width="32" height="448"/>
   <object id="12" x="624" y="576" width="64" height="48"/>
   <object id="13" x="880" y="16" width="32" height="320"/>
-  <object id="14" x="864" y="16" width="16" height="192"/>
+  <object id="14" x="864" y="16" width="16" height="192">
+   <properties>
+    <property name="isCollision" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
