@@ -90,17 +90,12 @@ function game:update(dt)
 
   self.waveGen:update(dt)
 
-  for e=1, #self.enemies, 1 do
-    self.enemies[e]:update(dt)
-  end
-
-  local goal = self.map.goal
-  -- Check if enemies are near the goal
-  for i, v in ipairs(self.enemies) do
-    local distance = math.sqrt(((goal.x - v:getX()) ^ 2) + ((goal.y - v:getY()) ^ 2))
-    if distance < 16 then
-      v:destroy()
+  for i, e in ipairs(self.enemies) do
+    if e.dead then
+      e:destroy()
       table.remove(self.enemies, i)
+    else
+      e:update(dt)
     end
   end
 end

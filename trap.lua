@@ -9,7 +9,12 @@ local Trap = Class{
     self.object:setType('static')
     self.object:setObject(self)
   end,
+  damage = 75,
 }
+
+function Trap:trigger(enemy, dt)
+  enemy:damage(self.damage * dt)
+end
 
 function Trap:draw()
   love.graphics.setColor(189 / 255, 163 / 255, 199 / 255)
