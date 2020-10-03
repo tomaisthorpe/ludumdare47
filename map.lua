@@ -284,6 +284,10 @@ function Map:update(dt)
     end
   else
     self.cursor = nil
+
+    for _, trap in ipairs(self.traps) do
+      trap:update(dt)
+    end
   end
 end
 

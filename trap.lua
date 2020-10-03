@@ -9,11 +9,34 @@ local Trap = Class{
     self.object:setType('static')
     self.object:setObject(self)
   end,
-  damage = 75,
+  damage = 10,
 }
 
-function Trap:trigger(enemy, dt)
-  enemy:damage(self.damage * dt)
+function Trap:getX()
+  return self.object:getX()
+end
+
+function Trap:getY()
+  return self.object:getY()
+end
+
+function Trap:trigger(enemies, dt)
+  for _, enemy in ipairs(enemies) do
+    enemy:damage(self.damage * dt)
+  end
+end
+
+function Trap:update(dt)
+  -- Check if we are colliding with any enemies
+  local colliders = self.world:queryRectangleArea(self:getX(), self:getY(), 32, 32, {'Enemy'})
+  if #colliders > 0 then
+    local enemies = {}
+    for _, collider in ipairs(colliders) do
+      table.insert(enemies, collider:getObject())
+    end
+
+    self:trigger(enemies, dt)
+  end
 end
 
 function Trap:draw()

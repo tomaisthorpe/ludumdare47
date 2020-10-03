@@ -15,7 +15,7 @@ local WaveController = Class{
 
 function WaveController:startWave(wave) 
   self.wave = wave
-  self.totalEnemies = wave * 3
+  self.totalEnemies = wave * 30
   self.spawnedEnemies = 0
 
   self.running = true

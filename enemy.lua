@@ -8,7 +8,7 @@ local Enemy = Class{
     self.world = map:getWorld()
 
     -- Create collider
-    self.object = self.world:newCircleCollider(x, y, 8)
+    self.object = self.world:newRectangleCollider(x - 8, y - 8, 16, 16)
     self.object:setCollisionClass('Enemy')
     self.object:setFixedRotation(true)
     self.object:setObject(self)
@@ -121,12 +121,6 @@ function Enemy:update(dt)
     self.game:removeLife()
     self.dead = true
   end
-
-  -- Check if they're colliding with a trap
-  colliders = self.world:queryCircleArea(self:getX(), self:getY(), 8, {'Trap'})
-  for _, collider in ipairs(colliders) do
-    collider:getObject():trigger(self, dt)
-  end
 end
 
 function Enemy:draw()
@@ -151,7 +145,7 @@ function Enemy:draw()
 
       love.graphics.setColor(1, 1, 0)
       local cx = (self.path[self.cur]:getX()) * 16
-      local cy = (self.path[self.cur]:getY()) * 16 
+      local cy = (self.path[self.cur]:getY()) * 16
       love.graphics.circle("fill", cx, cy, 4)
     end
   end
