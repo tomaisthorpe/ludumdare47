@@ -1,5 +1,6 @@
 local Camera = require("Camera")
 
+local conf = require("conf")
 local Map = require("map")
 local Player = require("player")
 local Enemy = require("enemy")
@@ -222,7 +223,11 @@ function game:drawUI()
   love.graphics.scale(game.scaling)
   love.graphics.setColor(1, 1, 1)
 
+  local phaseName = "Wave " .. self.wave
+
   if self.phase == "build" then
+    phaseName = "Build your traps!"
+
     -- Draw the start button
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(self.buttonImage, self.startButton.x1, self.startButton.y1)
@@ -230,6 +235,10 @@ function game:drawUI()
     love.graphics.setFont(self.fontLarge)
     love.graphics.printf("Start", self.startButton.x1, self.startButton.y1 + 8, 128, "center")
   end
+
+  love.graphics.setFont(self.fontLarge)
+  love.graphics.setColor(conf.phaseNameColor)
+  love.graphics.printf(phaseName, 0, 32, 800, "center")
 
     love.graphics.setFont(self.fontLarge)
   love.graphics.setColor(1, 0, 0)
