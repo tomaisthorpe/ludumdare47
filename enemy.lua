@@ -18,7 +18,7 @@ local Enemy = Class{
       self:startMoving()
     end
   end,
-  speed = 30000,
+  speed = 60000,
   path = nil,
 }
 
@@ -73,9 +73,6 @@ end
 function Enemy:moveToTile(x, y, dt)
   local goal_x = ((x - 1) * 16) + 8
   local goal_y = ((y - 1) * 16) + 8
-  -- local goal_x = x * 16
-  -- local goal_y = y * 16
-
 
   local dx = goal_x - self:getX() 
   local dy = goal_y - self:getY()
@@ -84,24 +81,21 @@ function Enemy:moveToTile(x, y, dt)
   local vx = math.cos(theta)
   local vy = math.sin(theta)
 
-
---   local vx = (goal_x - self:getX()) / math.abs(goal_x - self:getX())
---   local vy = (goal_y - self:getY()) / math.abs(goal_y - self:getY())
-
-
   self.object:setLinearVelocity(
     dt * self.speed * self.object:getMass() * vx,
     dt * self.speed * self.object:getMass() * vy
   )
-  print(vx, vy)
 
   -- Calculate distance to the next point
   local distance = math.sqrt(((goal_x - self:getX()) ^ 2) + ((goal_y - self:getY()) ^ 2))
-  print(distance)
   if distance < 8 then
     self.there = true
   end
 
+end
+
+function Enemy:destroy()
+  self.object:destroy()
 end
 
 function Enemy:update(dt)
@@ -115,19 +109,19 @@ function Enemy:draw()
   love.graphics.circle('fill', self.object:getX(), self.object:getY(), 8)
 
   -- Draw paths
-  -- if self.path then
-  --   line = {}
-  --   for n=1, #self.path, 1 do
-  --     table.insert(line, ((self.path[n]:getX()) - 1) * 16 + 8)
-  --     table.insert(line, ((self.path[n]:getY()) - 1) * 16 + 8)
-  --   end
+  if self.path then
+    line = {}
+    for n=1, #self.path, 1 do
+      table.insert(line, ((self.path[n]:getX()) - 1) * 16 + 8)
+      table.insert(line, ((self.path[n]:getY()) - 1) * 16 + 8)
+    end
 
-  --   love.graphics.line(line)
+    love.graphics.line(line)
 
-  --   local cx = (self.path[self.cur]:getX() - 1) * 16 + 8
-  --   local cy = (self.path[self.cur]:getY() - 1) * 16 + 8
-  --   love.graphics.circle("fill", cx, cy, 4)
-  -- end
+    local cx = (self.path[self.cur]:getX() - 1) * 16 + 8
+    local cy = (self.path[self.cur]:getY() - 1) * 16 + 8
+    love.graphics.circle("fill", cx, cy, 4)
+  end
 end
 
 return Enemy

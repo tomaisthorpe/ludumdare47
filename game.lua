@@ -3,6 +3,7 @@ local Camera = require("Camera")
 local Map = require("map")
 local Player = require("player")
 local Enemy = require("enemy")
+local WaveGen = require("waves")
 
 game = {
   translate = {0, 0},
@@ -38,9 +39,9 @@ function game:init()
 
   local playerStart = self.map:getPlayerStartPosition()
 
-  print(self.map:getWorld())
-
   self.player = Player(self.map:getWorld(), playerStart.x, playerStart.y)
+  self.waveGen = WaveGen(self, self.map.spawners)
+  self.waveGen:startWave(1)
 end
 
 function game:resize()
@@ -68,6 +69,18 @@ function game:mousepressed(x, y, button)
   end
 end
 
+function game:spawnEnemyAt(spawner)
+  table.insert(self.enemies, Enemy(
+    self.map,
+    spawner.x,
+    spawner.y
+  ))
+end
+
+function game:waveSpawnComplete()
+  self.waveSpawnComplete = true
+end
+
 function game:update(dt)
   self.map:update(dt)
   self.player:update(dt)
@@ -75,20 +88,20 @@ function game:update(dt)
   self.camera:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
 
-  self.lastSpawn = self.lastSpawn + dt
-
-  if self.lastSpawn > 0.5 then
-    -- TODO randomise spawners
-    spawnAt = self.map.spawners[1]
-
-    enemy = Enemy(self.map, spawnAt.x, spawnAt.y)
-    table.insert(self.enemies, enemy)
-
-    self.lastSpawn = 0
-  end
+  self.waveGen:update(dt)
 
   for e=1, #self.enemies, 1 do
     self.enemies[e]:update(dt)
+  end
+
+  local goal = self.map.goal
+  -- Check if enemies are near the goal
+  for i, v in ipairs(self.enemies) do
+    local distance = math.sqrt(((goal.x - v:getX()) ^ 2) + ((goal.y - v:getY()) ^ 2))
+    if distance < 16 then
+      v:destroy()
+      table.remove(self.enemies, i)
+    end
   end
 end
 

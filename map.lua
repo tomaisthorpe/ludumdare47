@@ -175,6 +175,10 @@ function Map:updateCanvas()
   love.graphics.setCanvas()
 
   self.hasCanvas = true
+
+  local grid = JGrid(self:getCollisionGrid())
+  self.finder = JPathfinder(grid, 'ASTAR', 0)
+  self.finder:annotateGrid()
 end
 
 function Map:canBuild(mx, my)
@@ -233,11 +237,8 @@ function Map:getPathToGoal(x, y)
   print('start', sx, sy)
   print('goal', gx, gy)
 
-  local grid = JGrid(self:getCollisionGrid())
-  local finder = JPathfinder(grid, 'ASTAR', 0)
-  finder:annotateGrid()
 
-  local path = finder:getPath(sx, sy, gx, gy, 3)
+  local path = self.finder:getPath(sx, sy, gx, gy, 3)
   print(path:getLength())
   return path
 end
@@ -286,6 +287,15 @@ function Map:draw()
 
   -- Draw debug 
   self.world:draw()
+
+  -- Draw clearance
+  local grid = self:getCollisionGrid()
+  for r=1, #grid, 1 do
+    for c=1, #grid[r], 1 do
+      local node = self.finder:getGrid():getNodeAt(c, r)
+      love.graphics.printf(node:getClearance(0), (c - 1) * 16, (r - 1) * 16, 16, "center", 0, 0.5, 0.5)
+    end
+  end
 end
 
 return Map
