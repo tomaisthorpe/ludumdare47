@@ -1,3 +1,5 @@
+local Map = require("map")
+
 game = {
   translate = {0, 0},
   scaling = 1,
@@ -20,6 +22,8 @@ function game:init()
   love.window.setFullscreen(true)
 
   game:calculateScaling()
+
+  self.map = Map()
 end
 
 function game:resize()
@@ -33,6 +37,10 @@ function game:keypressed(key)
   end
 end
 
+function game:update(dt)
+  self.map:update(dt)
+end
+
 function game:draw()
   love.graphics.push()
   love.graphics.translate(game.translate[1], game.translate[2])
@@ -41,10 +49,11 @@ function game:draw()
   love.graphics.setColor(1, 1, 1)
 
   -- Draw game
+  self.map:draw()
   
   love.graphics.pop()
 
-  -- Draw borders
+  -- -- Draw borders
   love.graphics.setColor(conf.borderColor[1], conf.borderColor[2], conf.borderColor[3])
   love.graphics.rectangle("fill", 0, 0, game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), game.translate[2])
