@@ -4,8 +4,9 @@ local Class = require "hump.class"
 local data = require "mapdata"
 
 local Map = Class{
-  init = function(self)
+  init = function(self, game)
     self.data = data
+    self.game = game
 
     -- Create a canvas so not having to redraw the tiles each frame
     self.width = data.width * 16
@@ -44,9 +45,12 @@ local Map = Class{
     self.colliders = {}
     self:updateColliders()
     self:updateObjects()
+
+    self:updateCanvas()
   end,
   hasCanvas = false,
   playerStartPosition = {x = 0, y = 0},
+  cursor = nil,
 }
 
 function Map:getWidth() 
@@ -112,6 +116,7 @@ function Map:updateCanvas()
   love.graphics.setColorMask()
   love.graphics.setColor(1, 1, 1)
 
+  self.grid = {}
   for l=1, #self.data.layers, 1 do
     local layer = self.data.layers[l]
 
@@ -128,6 +133,12 @@ function Map:updateCanvas()
           local col = (t - 1) % width 
           local row = math.floor((t - 1) / layer.width)
 
+          if tile == 1 then
+            table.insert(self.grid, 0)
+          else 
+            table.insert(self.grid, 1)
+          end
+
           love.graphics.draw(self.tiles[tile].image, self.tiles[tile].quad, col * 16, row * 16)
         end
       end
@@ -142,12 +153,33 @@ function Map:updateCanvas()
   self.hasCanvas = true
 end
 
+function Map:isFloor(x, y)
+  return self.grid[y * (self.width / 16) + (x + 1)] == 0
+end
+
 function Map:update(dt) 
   if self.hasCanvas == false then
     self:updateCanvas()
   end
 
   self.world:update(dt)
+
+  -- If game is in build phase, then display the cursor on the map
+  if self.game.phase == "build" then
+    -- Figure out which cell the mouse is on
+    local mx, my = self.game:getMousePosition()
+    local x = math.floor(mx / 16)
+    local y = math.floor(my / 16)
+
+    -- Check this is a valid space
+    if self:isFloor(x, y) and self:isFloor(x + 1, y) and self:isFloor(x, y + 1) and self:isFloor(x + 1, y + 1) then
+      self.cursor = {x = x, y = y}
+    else
+      self.cursor = nil
+    end
+  else
+    self.cursor = nil
+  end
 end
 
 function Map:draw()
@@ -155,6 +187,11 @@ function Map:draw()
   love.graphics.setColor(255, 255, 255)
 
   love.graphics.draw(self.canvas, 0, 0)
+
+  if self.cursor ~= nil then
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.rectangle("line", self.cursor.x * 16, self.cursor.y * 16, 32, 32)
+  end
 
   -- Draw debug 
   self.world:draw()

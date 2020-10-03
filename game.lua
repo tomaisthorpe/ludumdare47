@@ -6,6 +6,7 @@ local Player = require("player")
 game = {
   translate = {0, 0},
   scaling = 1,
+  phase = "build",
 }
 
 function game:calculateScaling()
@@ -26,7 +27,7 @@ function game:init()
 
   game:calculateScaling()
 
-  self.map = Map()
+  self.map = Map(self)
 
   self.camera = Camera(0, 0, 800, 600)
   self.camera:setFollowStyle('TOPDOWN_TIGHT')
@@ -56,6 +57,17 @@ function game:update(dt)
 
   self.camera:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
+end
+
+function game:getMousePosition() 
+  local mx, my = love.mouse.getPosition()
+
+  mx = (mx - self.translate[1]) / self.scaling
+  my = (my - self.translate[2]) / self.scaling
+
+  local cx, cy = self.camera:toWorldCoords(mx, my)
+
+  return cx, cy
 end
 
 function game:draw()
