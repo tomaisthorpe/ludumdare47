@@ -253,9 +253,9 @@ function Map:update(dt)
   -- If game is in build phase, then display the cursor on the map
   if self.game.phase == "build" then
     -- Figure out which cell the mouse is on
-    local mx, my = self.game:getMousePosition()
-    local x = math.floor(mx / 16)
-    local y = math.floor(my / 16)
+    local _, _ , cx, cy = self.game:getMousePosition()
+    local x = math.floor(cx / 16)
+    local y = math.floor(cy / 16)
 
     -- Check this is a valid space
     if self:isFloor(x, y) and self:isFloor(x + 1, y) and self:isFloor(x, y + 1) and self:isFloor(x + 1, y + 1) then
