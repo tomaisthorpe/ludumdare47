@@ -9,6 +9,8 @@ conf = {
 
   livesColor = {255 / 255, 0, 0},
   livesShadowColor = {215 / 255, 0, 0},
+
+  drawPaths = false,
 }
 
 return conf

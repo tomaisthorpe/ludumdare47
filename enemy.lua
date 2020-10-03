@@ -1,4 +1,5 @@
 local Class = require 'hump.class'
+local conf = require 'conf'
 
 local Enemy = Class{
   init = function(self, game, map, x, y)
@@ -82,8 +83,8 @@ function Enemy:move(dt)
 end
 
 function Enemy:moveToTile(x, y, dt)
-  local goal_x = ((x - 1) * 16) + 8
-  local goal_y = ((y - 1) * 16) + 8
+  local goal_x = x * 16
+  local goal_y = y * 16
 
   local dx = goal_x - self:getX()
   local dy = goal_y - self:getY()
@@ -138,18 +139,21 @@ function Enemy:draw()
   love.graphics.circle('fill', self.object:getX(), self.object:getY(), 8)
 
   -- Draw paths
-  if self.path then
-    line = {}
-    for n=1, #self.path, 1 do
-      table.insert(line, ((self.path[n]:getX()) - 1) * 16 + 8)
-      table.insert(line, ((self.path[n]:getY()) - 1) * 16 + 8)
+  if conf.drawPaths then
+    if self.path then
+      line = {}
+      for n=1, #self.path, 1 do
+        table.insert(line, self.path[n]:getX() * 16)
+        table.insert(line, self.path[n]:getY() * 16)
+      end
+
+      love.graphics.line(line)
+
+      love.graphics.setColor(1, 1, 0)
+      local cx = (self.path[self.cur]:getX()) * 16
+      local cy = (self.path[self.cur]:getY()) * 16 
+      love.graphics.circle("fill", cx, cy, 4)
     end
-
-    love.graphics.line(line)
-
-    local cx = (self.path[self.cur]:getX() - 1) * 16 + 8
-    local cy = (self.path[self.cur]:getY() - 1) * 16 + 8
-    love.graphics.circle("fill", cx, cy, 4)
   end
 end
 

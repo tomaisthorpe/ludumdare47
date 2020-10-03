@@ -24,7 +24,7 @@ local Map = Class{
     self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
     self.world:addCollisionClass('Enemy', {ignores={'Trap'}})
 
-    self.world:setQueryDebugDrawing(true)
+    -- self.world:setQueryDebugDrawing(true)
 
     -- Load the tiles
     self.tiles = {}
@@ -179,6 +179,25 @@ function Map:updateCanvas()
   local grid = JGrid(self:getCollisionGrid())
   self.finder = JPathfinder(grid, 'ASTAR', 0)
   self.finder:annotateGrid()
+  self.finder:setHeuristic(function (a, b)
+    return self:heuristic(a, b)
+  end)
+end
+
+function Map:heuristic(nodeA, nodeB)
+  local dx = math.abs(nodeA._x - nodeB._x)
+  local dy = math.abs(nodeA._y - nodeB._y)
+
+  local weight = 1
+  -- Is there a trap here?
+  colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'Trap'})
+  if #colliders > 0 then
+    weight = 100
+  end
+
+  weight = weight * ((math.random() + 1 / 2))
+
+  return (dx + dy) * weight
 end
 
 function Map:canBuild(mx, my)

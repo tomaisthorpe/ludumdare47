@@ -23,7 +23,7 @@ game = {
   wave = 1,
   waveSpawnComplete = false,
   lives = 10,
-  money = 100,
+  money = 1000,
   images = {},
   activeTrap = nil
 }
