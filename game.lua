@@ -13,8 +13,8 @@ game = {
   enemies = {},
   entities = {},
   startButton = {
-    x1 = 800 - 110,
-    y1 = 600 - 60,
+    x1 = 800 - 138,
+    y1 = 600 - 58,
     x2 = 800 - 10,
     y2 = 600 - 10,
   },
@@ -39,6 +39,11 @@ function game:init()
   love.window.setMode(800, 600)
   love.graphics.setDefaultFilter("nearest", "nearest")
   love.window.setFullscreen(true)
+
+  -- Load assets
+  self.buttonImage = love.graphics.newImage("assets/button.png")
+  self.font = love.graphics.newFont("assets/font.otf", 16)
+  self.fontLarge = love.graphics.newFont("assets/font.otf", 32)
 
   game:calculateScaling()
 
@@ -219,10 +224,14 @@ function game:drawUI()
 
   if self.phase == "build" then
     -- Draw the start button
-    love.graphics.setColor(0, 0, 1)
-    love.graphics.rectangle("fill", self.startButton.x1, self.startButton.y1, self.startButton.x2 - self.startButton.x1, self.startButton.y2 - self.startButton.y1)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(self.buttonImage, self.startButton.x1, self.startButton.y1)
+
+    love.graphics.setFont(self.fontLarge)
+    love.graphics.printf("Start", self.startButton.x1, self.startButton.y1 + 8, 128, "center")
   end
 
+    love.graphics.setFont(self.fontLarge)
   love.graphics.setColor(1, 0, 0)
   love.graphics.printf(self.lives, 10, 10, 100, "left")
 
