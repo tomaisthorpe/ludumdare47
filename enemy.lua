@@ -37,6 +37,7 @@ function Enemy:damage(health)
   if self.health <= 0 then
     self.dead = true
     self.health = 0
+    self.game:enemyKilled(20)
   end
 end
 

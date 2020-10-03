@@ -20,6 +20,7 @@ game = {
   wave = 1,
   waveSpawnComplete = false,
   lives = 10,
+  money = 100,
 }
 
 function game:calculateScaling()
@@ -86,7 +87,10 @@ function game:mousepressed(x, y, button)
     end
 
     if self.map:canBuild(cx, cy) then
-      self.map:addTrap(cx, cy)
+      if self.money >= 10 then
+        self.money = self.money - 10
+        self.map:addTrap(cx, cy)
+      end
     end
   end
 end
@@ -148,6 +152,10 @@ function game:getMousePosition()
   return mx, my, cx, cy
 end
 
+function game:enemyKilled(reward)
+  self.money = self.money + reward
+end
+
 function game:draw()
   love.graphics.push()
   love.graphics.translate(game.translate[1], game.translate[2])
@@ -193,5 +201,8 @@ function game:drawUI()
 
   love.graphics.setColor(1, 0, 0)
   love.graphics.printf(self.lives, 10, 10, 100, "left")
+
+  love.graphics.setColor(0, 1, 0)
+  love.graphics.printf(self.money, 100, 10, 100, "left")
   love.graphics.pop()
 end
