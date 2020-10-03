@@ -238,7 +238,7 @@ function Map:getPathToGoal(x, y)
   print('goal', gx, gy)
 
 
-  local path = self.finder:getPath(sx, sy, gx, gy, 3)
+  local path = self.finder:getPath(sx, sy, gx, gy, 2)
   print(path:getLength())
   return path
 end
@@ -289,6 +289,7 @@ function Map:draw()
   -- self.world:draw()
 
   -- Draw clearance
+  -- love.graphics.setFont(self.game.defaultFont)
   -- local grid = self:getCollisionGrid()
   -- for r=1, #grid, 1 do
   --   for c=1, #grid[r], 1 do

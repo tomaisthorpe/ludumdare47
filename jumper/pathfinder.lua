@@ -106,18 +106,62 @@ if (...) then
 	-- @usage myFinder:annotateGrid()
 	function Pathfinder:annotateGrid()
 		assert(self._walkable, 'Finder must implement a walkable value')
+
+    -- Loop the width
 		for x=self._grid._max_x,self._grid._min_x,-1 do
+      -- Loop the right
 			for y=self._grid._max_y,self._grid._min_y,-1 do
 				local node = self._grid:getNodeAt(x,y)
+
+
+        -- Check if current node is walkable
+        -- If it's not, then it will always be 0
 				if self._grid:isWalkableAt(x,y,self._walkable) then
+          -- Get node east of this one
 					local nr = self._grid:getNodeAt(node._x+1, node._y)
+
+          -- Get south east of this one
 					local nrd = self._grid:getNodeAt(node._x+1, node._y+1)
+          
+          -- Get south node
 					local nd = self._grid:getNodeAt(node._x, node._y+1)
+
 					if nr and nrd and nd then
 						local m = nrd._clearance[self._walkable] or 0
 						m = (nd._clearance[self._walkable] or 0)<m and (nd._clearance[self._walkable] or 0) or m
 						m = (nr._clearance[self._walkable] or 0)<m and (nr._clearance[self._walkable] or 0) or m
 						node._clearance[self._walkable] = m+1
+					else
+						node._clearance[self._walkable] = 1
+					end
+				else node._clearance[self._walkable] = 0
+				end
+			end
+		end
+
+		for x=self._grid._min_x,self._grid._max_x,1 do
+      -- Loop the right
+			for y=self._grid._min_y,self._grid._max_y,1 do
+				local node = self._grid:getNodeAt(x,y)
+
+
+        -- Check if current node is walkable
+        -- If it's not, then it will always be 0
+				if self._grid:isWalkableAt(x,y,self._walkable) then
+          -- Get node west of this one
+					local nr = self._grid:getNodeAt(node._x-1, node._y)
+
+          -- Get north west of this one
+					local nrd = self._grid:getNodeAt(node._x-1, node._y-1)
+          
+          -- Get north node
+					local nd = self._grid:getNodeAt(node._x, node._y-1)
+
+					if nr and nrd and nd then
+						local m = nrd._clearance[self._walkable] or 0
+						m = (nd._clearance[self._walkable] or 0)<m and (nd._clearance[self._walkable] or 0) or m
+						m = (nr._clearance[self._walkable] or 0)<m and (nr._clearance[self._walkable] or 0) or m
+						node._clearance[self._walkable] = math.min(node._clearance[self._walkable], m+1)
 					else
 						node._clearance[self._walkable] = 1
 					end
