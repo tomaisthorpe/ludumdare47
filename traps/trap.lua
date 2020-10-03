@@ -40,7 +40,7 @@ function Trap:update(dt)
 end
 
 function Trap:draw()
-  love.graphics.setColor(189 / 255, 163 / 255, 199 / 255)
+  love.graphics.setColor(1, 1, 1)
 
   love.graphics.rectangle('fill', self.object:getX() - 16, self.object:getY() - 16, 32, 32)
 end

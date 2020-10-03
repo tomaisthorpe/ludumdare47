@@ -1,6 +1,7 @@
 local Class = require 'hump.class'
 
-local Trap = require 'trap'
+local SlimeTrap = require 'traps.slime'
+local SpikeTrap = require 'traps.spike'
 
 local TrapSelector = Class{
   init = function(self, game)
@@ -11,15 +12,15 @@ local TrapSelector = Class{
   traps = {
     {
       name = 'Slime?',
-      class = Trap,
+      class = SlimeTrap,
       cost = 20,
       description = 'Damages enemies as long as they are stood on it',
     },
     {
-      name = 'Slime!',
-      class = Trap,
+      name = 'Spikes!',
+      class = SpikeTrap,
       cost = 30,
-      description = 'Damages enemies',
+      description = 'Deals lots of damage, but has cooldown',
     },
   },
   currentTrap = 1,

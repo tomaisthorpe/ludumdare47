@@ -253,12 +253,7 @@ function Map:getPathToGoal(x, y)
   local gx = math.floor(self.goal.x / 16)
   local gy = math.floor(self.goal.y / 16)
 
-  print('start', sx, sy)
-  print('goal', gx, gy)
-
-
   local path = self.finder:getPath(sx, sy, gx, gy, 2)
-  print(path:getLength())
   return path
 end
 
