@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="15">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="22">
  <editorsettings>
   <export target="mapdata.lua" format="lua"/>
  </editorsettings>
@@ -55,8 +55,14 @@
    </properties>
    <point/>
   </object>
+  <object id="15" type="goal" x="1216" y="304">
+   <point/>
+  </object>
+  <object id="16" type="spawner" x="64" y="304">
+   <point/>
+  </object>
  </objectgroup>
- <objectgroup id="3" name="Collisions">
+ <objectgroup id="3" name="Collisions" locked="1">
   <properties>
    <property name="isCollision" type="bool" value="true"/>
   </properties>

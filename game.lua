@@ -2,11 +2,14 @@ local Camera = require("Camera")
 
 local Map = require("map")
 local Player = require("player")
+local Enemy = require("enemy")
 
 game = {
   translate = {0, 0},
   scaling = 1,
   phase = "build",
+  lastSpawn = 0,
+  enemies = {},
 }
 
 function game:calculateScaling()
@@ -71,6 +74,22 @@ function game:update(dt)
 
   self.camera:update(dt)
   self.camera:follow(self.player:getX(), self.player:getY())
+
+  self.lastSpawn = self.lastSpawn + dt
+
+  if self.lastSpawn > 0.5 then
+    -- TODO randomise spawners
+    spawnAt = self.map.spawners[1]
+
+    enemy = Enemy(self.map, spawnAt.x, spawnAt.y)
+    table.insert(self.enemies, enemy)
+
+    self.lastSpawn = 0
+  end
+
+  for e=1, #self.enemies, 1 do
+    self.enemies[e]:update(dt)
+  end
 end
 
 function game:getMousePosition() 
@@ -95,6 +114,12 @@ function game:draw()
   self.camera:attach()
   self.map:draw()
   self.player:draw()
+
+  -- Draw enemies
+  for e=1, #self.enemies, 1 do
+    self.enemies[e]:draw()
+  end
+
   self.camera:detach()
   
   love.graphics.pop()

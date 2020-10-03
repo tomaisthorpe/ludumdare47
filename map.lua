@@ -1,5 +1,7 @@
 local wf = require "windfield"
 local Class = require "hump.class"
+local JGrid = require "jumper.grid"
+local JPathfinder = require "jumper.pathfinder"
 
 local Trap = require "trap"
 local data = require "mapdata"
@@ -20,6 +22,7 @@ local Map = Class{
     self.world:addCollisionClass('Solid')
     self.world:addCollisionClass('Trap')
     self.world:addCollisionClass('Player', {ignores={'Trap'}})
+    self.world:addCollisionClass('Enemy', {ignores={'Trap'}})
 
     self.world:setQueryDebugDrawing(true)
 
@@ -55,7 +58,9 @@ local Map = Class{
   hasCanvas = false,
   playerStartPosition = {x = 0, y = 0},
   cursor = nil,
-  traps = {},
+  traps = {}, 
+  spawners = {},
+  goal = {},
 }
 
 function Map:getWidth() 
@@ -107,6 +112,20 @@ function Map:updateObjects()
         local object = layer.objects[o]
         if object.type == "playerStart" then
           self.playerStartPosition = {
+            x = object.x,
+            y = object.y,
+          }
+        end
+
+        if object.type == "spawner" then
+          table.insert(self.spawners, {
+            x = object.x,
+            y = object.y,
+          })
+        end
+
+        if object.type == "goal" then
+          self.goal = {
             x = object.x,
             y = object.y,
           }
@@ -185,6 +204,42 @@ end
 
 function Map:isFloor(x, y)
   return self.grid[y * (self.width / 16) + (x + 1)] == 0
+end
+
+function Map:getCollisionGrid()
+  local grid = {}
+  for r = 1, self.height / 16, 1 do
+    local row = {}
+    for c = 1, self.width / 16, 1 do
+      table.insert(row, self.grid[(r - 1) * (self.width / 16) + (c)])
+    end
+
+    if #row > 0 then
+      table.insert(grid, row)
+    end
+  end
+
+  return grid
+end
+
+function Map:getPathToGoal(x, y)
+  -- Convert to grid space
+  local sx = math.floor(x / 16)
+  local sy = math.floor(y / 16)
+
+  local gx = math.floor(self.goal.x / 16)
+  local gy = math.floor(self.goal.y / 16)
+
+  print('start', sx, sy)
+  print('goal', gx, gy)
+
+  local grid = JGrid(self:getCollisionGrid())
+  local finder = JPathfinder(grid, 'ASTAR', 0)
+  finder:annotateGrid()
+
+  local path = finder:getPath(sx, sy, gx, gy, 3)
+  print(path:getLength())
+  return path
 end
 
 function Map:update(dt) 

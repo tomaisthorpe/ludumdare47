@@ -9,7 +9,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 4,
-  nextobjectid = 15,
+  nextobjectid = 22,
   properties = {},
   tilesets = {
     {
@@ -123,6 +123,32 @@ return {
           properties = {
             ["isCollisions"] = true
           }
+        },
+        {
+          id = 15,
+          name = "",
+          type = "goal",
+          shape = "point",
+          x = 1216,
+          y = 304,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 16,
+          name = "",
+          type = "spawner",
+          shape = "point",
+          x = 64,
+          y = 304,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },
