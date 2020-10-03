@@ -23,6 +23,7 @@ game = {
   waveSpawnComplete = false,
   lives = 10,
   money = 100,
+  images = {},
 }
 
 function game:calculateScaling()
@@ -42,7 +43,9 @@ function game:init()
   love.window.setFullscreen(true)
 
   -- Load assets
-  self.buttonImage = love.graphics.newImage("assets/button.png")
+  self.images.button = love.graphics.newImage("assets/button.png")
+  self.images.money = love.graphics.newImage("assets/money.png")
+  self.images.lives = love.graphics.newImage("assets/lives.png")
   self.font = love.graphics.newFont("assets/font.otf", 16)
   self.fontLarge = love.graphics.newFont("assets/font.otf", 32)
 
@@ -230,7 +233,7 @@ function game:drawUI()
 
     -- Draw the start button
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.buttonImage, self.startButton.x1, self.startButton.y1)
+    love.graphics.draw(self.images.button, self.startButton.x1, self.startButton.y1)
 
     love.graphics.setFont(self.fontLarge)
     love.graphics.printf("Start", self.startButton.x1, self.startButton.y1 + 8, 128, "center")
@@ -240,11 +243,16 @@ function game:drawUI()
   love.graphics.setColor(conf.phaseNameColor)
   love.graphics.printf(phaseName, 0, 32, 800, "center")
 
-    love.graphics.setFont(self.fontLarge)
-  love.graphics.setColor(1, 0, 0)
-  love.graphics.printf(self.lives, 10, 10, 100, "left")
+  love.graphics.setFont(self.fontLarge)
 
-  love.graphics.setColor(0, 1, 0)
-  love.graphics.printf(self.money, 100, 10, 100, "left")
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(self.images.lives, 10, 10)
+  love.graphics.setColor(conf.livesColor)
+  love.graphics.printf(self.lives, 50, 10, 100, "left")
+
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(self.images.money, 800 - 42, 10)
+  love.graphics.setColor(conf.moneyColor)
+  love.graphics.printf(self.money, 648, 10, 100, "right")
   love.graphics.pop()
 end
