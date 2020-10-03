@@ -5,6 +5,7 @@ local Map = require("map")
 local Player = require("player")
 local Enemy = require("enemy")
 local WaveGen = require("waves")
+local TrapSelector = require("trapselector")
 
 game = {
   translate = {0, 0},
@@ -24,6 +25,7 @@ game = {
   lives = 10,
   money = 100,
   images = {},
+  activeTrap = nil
 }
 
 function game:calculateScaling()
@@ -48,6 +50,7 @@ function game:init()
   self.images.lives = love.graphics.newImage("assets/lives.png")
   self.font = love.graphics.newFont("assets/font.otf", 16)
   self.fontLarge = love.graphics.newFont("assets/font.otf", 32)
+  self.fontSmall = love.graphics.newFont("assets/veramono.ttf", 8)
 
   game:calculateScaling()
 
@@ -61,6 +64,7 @@ function game:init()
 
   self.player = Player(self, self.map:getWorld(), playerStart.x, playerStart.y)
   self.waveGen = WaveGen(self, self.map.spawners)
+  self.trapselector = TrapSelector(self)
 end
 
 function game:resize()
@@ -96,14 +100,27 @@ function game:mousepressed(x, y, button)
       return
     end
 
+    local selected = self.trapselector:mousepressed(mx, my)
+    -- Returns true if something was clicked on
+    if selected then
+      return
+    end
+
     if self.map:canBuild(cx, cy) then
       if self.money >= 10 then
-        self.money = self.money - 10
-        self.map:addTrap(cx, cy)
+        self.money = self.money - self.activeTrap.cost
+        self.map:addTrap(cx, cy, self.activeTrap.class)
       end
     end
   else
     self.player:shoot()
+  end
+end
+
+function game:mousemoved()
+  if self.phase == "build" then
+    local mx, my = self:getMousePosition()
+    self.trapselector:mousemoved(mx, my)
   end
 end
 
@@ -237,6 +254,8 @@ function game:drawUI()
 
     love.graphics.setFont(self.fontLarge)
     love.graphics.printf("Start", self.startButton.x1, self.startButton.y1 + 8, 128, "center")
+
+    self.trapselector:draw()
   end
 
   love.graphics.setFont(self.fontLarge)

@@ -3,7 +3,6 @@ local Class = require "hump.class"
 local JGrid = require "jumper.grid"
 local JPathfinder = require "jumper.pathfinder"
 
-local Trap = require "trap"
 local data = require "mapdata"
 
 local Map = Class{
@@ -200,11 +199,11 @@ function Map:canBuild(mx, my)
     return false
 end
 
-function Map:addTrap(mx, my)
+function Map:addTrap(mx, my, trap)
   local x = math.floor(mx / 16)
   local y = math.floor(my / 16)
 
-  table.insert(self.traps, Trap(self.world, x * 16, y * 16))
+  table.insert(self.traps, trap(self.world, x * 16, y * 16))
 end
 
 function Map:isFloor(x, y)
