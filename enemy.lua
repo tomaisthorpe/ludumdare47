@@ -134,7 +134,7 @@ function Enemy:draw()
     return
   end
 
-  love.graphics.setColor(1, 0, 0)
+  love.graphics.setColor(0, 0, 1)
 
   love.graphics.circle('fill', self.object:getX(), self.object:getY(), 8)
 
@@ -154,6 +154,13 @@ function Enemy:draw()
       local cy = (self.path[self.cur]:getY()) * 16 
       love.graphics.circle("fill", cx, cy, 4)
     end
+  end
+
+  -- Draw health bar
+  if self.health < 100 then
+    love.graphics.setColor(conf.healthColor)
+    local width = (self.health / 100) * 16
+    love.graphics.rectangle("fill", self.object:getX() - (width / 2), self.object:getY() - 11, width, 2)
   end
 end
 
