@@ -240,6 +240,9 @@ function game:drawUI()
   end
 
   love.graphics.setFont(self.fontLarge)
+  love.graphics.setColor(conf.phaseNameShadowColor)
+  love.graphics.printf(phaseName, 0, 34, 800, "center")
+
   love.graphics.setColor(conf.phaseNameColor)
   love.graphics.printf(phaseName, 0, 32, 800, "center")
 
@@ -247,12 +250,16 @@ function game:drawUI()
 
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(self.images.lives, 10, 10)
-  love.graphics.setColor(conf.livesColor)
+  love.graphics.setColor(conf.livesShadowColor)
   love.graphics.printf(self.lives, 50, 10, 100, "left")
+  love.graphics.setColor(conf.livesColor)
+  love.graphics.printf(self.lives, 50, 8, 100, "left")
 
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(self.images.money, 800 - 42, 10)
-  love.graphics.setColor(conf.moneyColor)
+  love.graphics.setColor(conf.moneyShadowColor)
   love.graphics.printf(self.money, 648, 10, 100, "right")
+  love.graphics.setColor(conf.moneyColor)
+  love.graphics.printf(self.money, 648, 8, 100, "right")
   love.graphics.pop()
 end
