@@ -51,6 +51,20 @@ function game:keypressed(key)
   end
 end
 
+function game:mousepressed(x, y, button)
+  if button ~= 1 then
+    return
+  end
+
+  local mx, my = self:getMousePosition()
+
+  if self.phase == "build" then
+    if self.map:canBuild(mx, my) then
+      self.map:addTrap(mx, my)
+    end
+  end
+end
+
 function game:update(dt)
   self.map:update(dt)
   self.player:update(dt)

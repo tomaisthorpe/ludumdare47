@@ -2,7 +2,6 @@ local Class = require 'hump.class'
 
 local Player = Class{
   init = function(self, world, x, y)
-    print(self, world, x, y)
     self.world = world
   
     -- Create collider

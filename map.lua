@@ -1,6 +1,7 @@
 local wf = require "windfield"
 local Class = require "hump.class"
 
+local Trap = require "trap"
 local data = require "mapdata"
 
 local Map = Class{
@@ -17,7 +18,10 @@ local Map = Class{
     love.physics.setMeter(32)
     self.world = wf.newWorld(0, 0, true)
     self.world:addCollisionClass('Solid')
-    self.world:addCollisionClass('Player')
+    self.world:addCollisionClass('Trap')
+    self.world:addCollisionClass('Player', {ignores={'Trap'}})
+
+    self.world:setQueryDebugDrawing(true)
 
     -- Load the tiles
     self.tiles = {}
@@ -51,6 +55,7 @@ local Map = Class{
   hasCanvas = false,
   playerStartPosition = {x = 0, y = 0},
   cursor = nil,
+  traps = {},
 }
 
 function Map:getWidth() 
@@ -153,6 +158,31 @@ function Map:updateCanvas()
   self.hasCanvas = true
 end
 
+function Map:canBuild(mx, my)
+    local x = math.floor(mx / 16)
+    local y = math.floor(my / 16)
+
+    -- Check this is a valid space
+    if self:isFloor(x, y) and self:isFloor(x + 1, y) and self:isFloor(x, y + 1) and self:isFloor(x + 1, y + 1) then
+      -- Check there's no trap here already
+      colliders = self.world:queryRectangleArea(x * 16 + 1, y * 16 + 1, 30, 30, {'Trap'})
+      if #colliders == 0 then
+        return true
+      end
+
+      return false
+    end
+
+    return false
+end
+
+function Map:addTrap(mx, my)
+  local x = math.floor(mx / 16)
+  local y = math.floor(my / 16)
+
+  table.insert(self.traps, Trap(self.world, x * 16, y * 16))
+end
+
 function Map:isFloor(x, y)
   return self.grid[y * (self.width / 16) + (x + 1)] == 0
 end
@@ -188,6 +218,12 @@ function Map:draw()
 
   love.graphics.draw(self.canvas, 0, 0)
 
+  -- Draw all the traps
+  for t=1, #self.traps, 1 do
+    self.traps[t]:draw()
+  end
+  
+  -- Draw the cursor if applicable
   if self.cursor ~= nil then
     love.graphics.setColor(255, 255, 255)
     love.graphics.rectangle("line", self.cursor.x * 16, self.cursor.y * 16, 32, 32)
