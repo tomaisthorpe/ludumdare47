@@ -11,6 +11,7 @@ game = {
   phase = "build",
   lastSpawn = 0,
   enemies = {},
+  entities = {},
   startButton = {
     x1 = 800 - 110,
     y1 = 600 - 60,
@@ -49,7 +50,7 @@ function game:init()
 
   local playerStart = self.map:getPlayerStartPosition()
 
-  self.player = Player(self.map:getWorld(), playerStart.x, playerStart.y)
+  self.player = Player(self, self.map:getWorld(), playerStart.x, playerStart.y)
   self.waveGen = WaveGen(self, self.map.spawners)
 end
 
@@ -92,6 +93,8 @@ function game:mousepressed(x, y, button)
         self.map:addTrap(cx, cy)
       end
     end
+  else
+    self.player:shoot()
   end
 end
 
@@ -110,6 +113,10 @@ function game:spawnEnemyAt(spawner)
     spawner.x,
     spawner.y
   ))
+end
+
+function game:addEntity(entity)
+  table.insert(self.entities, entity)
 end
 
 function game:waveComplete()
@@ -135,6 +142,14 @@ function game:update(dt)
     if e.dead then
       e:destroy()
       table.remove(self.enemies, i)
+    else
+      e:update(dt)
+    end
+  end
+
+  for i, e in ipairs(self.entities) do
+    if e.dead then
+      table.remove(self.entities, i)
     else
       e:update(dt)
     end
@@ -170,8 +185,17 @@ function game:draw()
 
   -- Draw enemies
   for e=1, #self.enemies, 1 do
-    self.enemies[e]:draw()
+    if not self.enemies[e].dead then
+      self.enemies[e]:draw()
+    end
   end
+
+  for e=1, #self.entities, 1 do
+    if not self.entities[e].dead then
+      self.entities[e]:draw()
+    end
+  end
+
 
   self.camera:detach()
   

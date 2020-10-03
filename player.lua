@@ -1,7 +1,9 @@
 local Class = require 'hump.class'
+local Bullet = require 'bullet'
 
 local Player = Class{
-  init = function(self, world, x, y)
+  init = function(self, game, world, x, y)
+    self.game = game
     self.world = world
   
     -- Create collider
@@ -12,6 +14,9 @@ local Player = Class{
     self.object:setLinearDamping(15)
   end,
   speed = 3000,
+
+  fireRate = 0.2,
+  lastShot = 0,
 }
 
 function Player:getX() 
@@ -38,6 +43,24 @@ function Player:update(dt)
   if love.keyboard.isDown('down') or love.keyboard.isDown('s') then
     self.object:applyForce(0, self.speed * self.object:getMass())
   end
+end
+
+function Player:shoot()
+  -- Check the user can actually shoot
+  if self.lastShot >= love.timer.getTime() - self.fireRate then
+    return
+  end
+
+  self.lastShot = love.timer.getTime()
+
+  local _, _, cx, cy = self.game:getMousePosition()
+
+  local dx = cx - self:getX()
+  local dy = cy - self:getY()
+  local theta = math.atan2(dy, dx)
+
+  local bullet = Bullet(self.world, self:getX(), self:getY(), theta)
+  self.game:addEntity(bullet)
 end
 
 function Player:draw()

@@ -21,7 +21,8 @@ local Map = Class{
     self.world = wf.newWorld(0, 0, true)
     self.world:addCollisionClass('Solid')
     self.world:addCollisionClass('Trap')
-    self.world:addCollisionClass('Player', {ignores={'Trap'}})
+    self.world:addCollisionClass('Bullet', {ignores={'Trap'}})
+    self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
     self.world:addCollisionClass('Enemy', {ignores={'Trap'}})
 
     self.world:setQueryDebugDrawing(true)
@@ -286,17 +287,17 @@ function Map:draw()
   end
 
   -- Draw debug 
-  self.world:draw()
+  -- self.world:draw()
 
   -- Draw clearance
-  local grid = self:getCollisionGrid()
-  for r=1, #grid, 1 do
-    for c=1, #grid[r], 1 do
-      local node = self.finder:getGrid():getNodeAt(c, r)
-      love.graphics.setColor(255, 255, 255)
-      love.graphics.printf(node:getClearance(0), (c - 1) * 16, (r - 1) * 16, 16, "center", 0, 0.5, 0.5)
-    end
-  end
+  -- local grid = self:getCollisionGrid()
+  -- for r=1, #grid, 1 do
+  --   for c=1, #grid[r], 1 do
+  --     local node = self.finder:getGrid():getNodeAt(c, r)
+  --     love.graphics.setColor(255, 255, 255)
+  --     love.graphics.printf(node:getClearance(0), (c - 1) * 16, (r - 1) * 16, 16, "center", 0, 0.5, 0.5)
+  --   end
+  -- end
 end
 
 return Map
