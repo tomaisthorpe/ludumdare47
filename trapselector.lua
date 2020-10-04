@@ -15,12 +15,16 @@ local TrapSelector = Class{
       class = AcidTrap,
       cost = 20,
       description = 'Damages enemies as long as they are stood on it',
+      image = love.graphics.newImage("assets/acid.png"),
+      quad = love.graphics.newQuad(0, 0, 32, 32, 1024, 32),
     },
     {
       name = 'Spikes!',
       class = SpikeTrap,
       cost = 30,
       description = 'Deals lots of damage, but has cooldown',
+      image = love.graphics.newImage("assets/spike.png"),
+      quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 256, 32),
     },
   },
   currentTrap = 1,
@@ -92,8 +96,8 @@ function TrapSelector:draw()
       love.graphics.rectangle("line", 0, 0, 48, 72, 4, 4)
     end
 
-    love.graphics.setColor(0.6, 0.6, 0.6, opacity)
-    love.graphics.rectangle("fill", 8, 4, 32, 32, 2, 2)
+    love.graphics.setColor(1, 1, 1, opacity)
+    love.graphics.draw(trap.image, trap.quad, 8, 4)
 
     love.graphics.setColor(0, 0, 0)
     love.graphics.setFont(self.game.fontSmall)
