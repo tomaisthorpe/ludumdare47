@@ -7,7 +7,7 @@ local Enemy = Class{
     self.map = map
     self.world = map:getWorld()
     self.modifier = modifier
-    self.speed = 30000 * speedModifier
+    self.speed = 100 * speedModifier
     self.colorMask = colorMask
 
     -- Create collider
@@ -112,8 +112,8 @@ function Enemy:moveToTile(x, y, dt)
   end
 
   self.object:setLinearVelocity(
-    dt * speed * vx,
-    dt * speed * vy
+    speed * vx,
+    speed * vy
   )
 
   -- Calculate distance to the next point
