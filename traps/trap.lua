@@ -12,6 +12,10 @@ local Trap = Class{
   damage = 10,
 }
 
+function Trap:destroy()
+  self.object:destroy()
+end
+
 function Trap:getX()
   return self.object:getX()
 end

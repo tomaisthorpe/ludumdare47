@@ -23,7 +23,7 @@ local Map = Class{
     self.world:addCollisionClass('Trap')
     self.world:addCollisionClass('Bullet', {ignores={'Trap'}})
     self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
-    self.world:addCollisionClass('Enemy', {ignores={'Trap', 'Enemy'}})
+    self.world:addCollisionClass('Enemy', {ignores={'Trap', 'Enemy', 'Player'}})
 
     -- self.world:setQueryDebugDrawing(true)
 
@@ -222,6 +222,25 @@ function Map:canBuild(mx, my)
     end
 
     return false
+end
+
+function Map:canSell(mx, my)
+  local x = math.floor(mx / 16)
+  local y = math.floor(my / 16)
+
+  -- Check if there's a trap at this point
+  for i, trap in ipairs(self.traps) do
+    if trap:getX() - 16 == x * 16 and trap:getY() - 16 == y * 16 then
+      return i
+    end
+  end
+
+  return -1
+end
+
+function Map:removeTrap(index)
+  self.traps[index]:destroy()
+  table.remove(self.traps, index)
 end
 
 function Map:addTrap(mx, my, trap)

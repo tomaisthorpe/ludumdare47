@@ -22,8 +22,8 @@ game = {
   },
   wave = 1,
   waveSpawnComplete = false,
-  lives = 1,
-  money = 1000,
+  lives = 10,
+  money = 100,
   images = {},
   activeTrap = nil,
   gameOver = false,
@@ -107,13 +107,24 @@ function game:removeLife()
 end
 
 function game:mousepressed(x, y, button)
-  if button ~= 1 then
+  if button == 3 then
     return
   end
 
   local mx, my, cx, cy = self:getMousePosition()
 
   if self.phase == "build" then
+    if button == 2 then
+      -- Check if can sell trap
+      
+      local index = self.map:canSell(cx, cy)
+      if index ~= -1 then
+        self.map:removeTrap(index)
+      end
+
+      return
+    end
+
     local button = self.startButton
     -- Check if the user pressed on the start button
     if mx >= button.x1 and mx <= button.x2 and my >= button.y1 and my <= button.y2 then
@@ -134,6 +145,10 @@ function game:mousepressed(x, y, button)
       end
     end
   else
+    if button == 2 then
+      return
+    end
+
     self.player:shoot()
   end
 end
@@ -239,7 +254,6 @@ function game:draw()
   -- Draw game
   self.camera:attach()
   self.map:draw()
-  self.player:draw()
 
   -- Draw enemies
   for e=1, #self.enemies, 1 do
@@ -254,6 +268,7 @@ function game:draw()
     end
   end
 
+  self.player:draw()
 
   self.camera:detach()
   
@@ -300,6 +315,19 @@ function game:drawUI()
     love.graphics.printf("Start wave", self.startButton.x1, self.startButton.y1 + 14, 128, "center")
 
     self.trapselector:draw()
+
+    love.graphics.setFont(self.font)
+    love.graphics.setColor(0.5, 0.5, 0.5)
+    love.graphics.printf("Right click to destroy", 0, 91, 800, "center")
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf("Right click to destroy", 0, 90, 800, "center")
+
+    love.graphics.setColor(0.5, 0.5, 0.5)
+    love.graphics.printf("Left click to build", 0, 71, 800, "center")
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf("Left click to build", 0, 70, 800, "center")
   end
 
   love.graphics.setFont(self.fontLarge)
