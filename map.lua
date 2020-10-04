@@ -24,6 +24,7 @@ local Map = Class{
     self.world:addCollisionClass('Bullet', {ignores={'Trap'}})
     self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
     self.world:addCollisionClass('Enemy', {ignores={'Trap', 'Enemy', 'Player'}})
+    self.world:addCollisionClass('Spawner', {ignores={'All'}})
 
     -- self.world:setQueryDebugDrawing(true)
 
@@ -119,9 +120,14 @@ function Map:updateObjects()
         end
 
         if object.type == "spawner" then
+          local collider = self.world:newRectangleCollider(object.x, object.y, object.width, object.height)
+          collider:setCollisionClass('Spawner')
           table.insert(self.spawners, {
             x = object.x,
             y = object.y,
+            width = object.width,
+            height = object.height,
+            collider = collider,
           })
         end
 
@@ -251,7 +257,20 @@ function Map:addTrap(mx, my, trap)
 end
 
 function Map:isFloor(x, y)
-  return self.grid[y * (self.width / 16) + (x + 1)] == 0
+  return self.grid[y * (self.width / 16) + (x + 1)] == 0 and not self:isSpawner(x, y)
+end
+
+function Map:isSpawner(gx, gy)
+  local x = gx * 16
+  local y = gy * 16
+
+  for _, s in ipairs(self.spawners) do
+    if x >= s.x and x < s.x + s.width and y >= s.y and y < s.y + s.height then
+      return true
+    end
+  end
+
+  return false
 end
 
 function Map:getCollisionGrid()
@@ -270,7 +289,7 @@ function Map:getCollisionGrid()
   return grid
 end
 
-function Map:getPathToGoal(x, y)
+function Map:getPathToGoal(x, y, size)
   -- Convert to grid space
   local sx = math.floor(x / 16)
   local sy = math.floor(y / 16)
@@ -278,7 +297,7 @@ function Map:getPathToGoal(x, y)
   local gx = math.floor(self.goal.x / 16)
   local gy = math.floor(self.goal.y / 16)
 
-  local path = self.finder:getPath(sx, sy, gx, gy, 2)
+  local path = self.finder:getPath(sx, sy, gx, gy, size)
   return path
 end
 

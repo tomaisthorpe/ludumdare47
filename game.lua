@@ -139,17 +139,11 @@ function game:mousepressed(x, y, button)
     end
 
     if self.map:canBuild(cx, cy) then
-      if self.money >= 10 then
+      if self.money >= self.activeTrap.cost then
         self.money = self.money - self.activeTrap.cost
         self.map:addTrap(cx, cy, self.activeTrap.class)
       end
     end
-  else
-    if button == 2 then
-      return
-    end
-
-    self.player:shoot()
   end
 end
 
@@ -174,12 +168,15 @@ function game:startPhase(phase)
   end
 end
 
-function game:spawnEnemyAt(spawner)
+function game:spawnEnemyAt(spawner, modifier, speedModifier, colorMask)
   table.insert(self.enemies, Enemy(
     self,
     self.map,
-    spawner.x,
-    spawner.y
+    math.random(spawner.x + 16, spawner.x + spawner.width - 16),
+    math.random(spawner.y + 16, spawner.y + spawner.height - 16),
+    modifier,
+    speedModifier,
+    colorMask
   ))
   self:playSound('spawn')
 end

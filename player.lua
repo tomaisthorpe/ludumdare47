@@ -45,6 +45,10 @@ function Player:update(dt)
   if love.keyboard.isDown('down') or love.keyboard.isDown('s') then
     self.object:applyForce(0, self.speed * self.object:getMass())
   end
+
+  if love.mouse.isDown(1) and self.game.phase == "defend" then
+    self:shoot()
+  end
 end
 
 function Player:shoot()

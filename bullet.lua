@@ -12,7 +12,7 @@ local Bullet =  Class{
     self.object:setCollisionClass('Bullet')
   end,
   dead = false,
-  damage = 20
+  damage = 10
 }
 
 function Bullet:update(dt)
@@ -24,7 +24,9 @@ function Bullet:update(dt)
     local collision = self.object:getEnterCollisionData(self.targetClass)
     local object = collision.collider:getObject()
 
-    object:damage(self.damage)
+    if object then
+      object:damage(self.damage)
+    end
 
     self.game:playSound('hit')
 

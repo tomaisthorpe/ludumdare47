@@ -2,13 +2,16 @@ local Class = require 'hump.class'
 local conf = require 'conf'
 
 local Enemy = Class{
-  init = function(self, game, map, x, y)
+  init = function(self, game, map, x, y, modifier, speedModifier, colorMask)
     self.game = game
     self.map = map
     self.world = map:getWorld()
+    self.modifier = modifier
+    self.speed = 30000 * speedModifier
+    self.colorMask = colorMask
 
     -- Create collider
-    self.object = self.world:newRectangleCollider(x - 8, y - 8, 16, 16)
+    self.object = self.world:newRectangleCollider(x - (8 * modifier), y - (8 * modifier), 16 * modifier, 16 * modifier)
     self.object:setCollisionClass('Enemy')
     self.object:setFixedRotation(true)
     self.object:setObject(self)
@@ -22,7 +25,6 @@ local Enemy = Class{
       self:startMoving()
     end
   end,
-  speed = 60000,
   path = nil,
   health = 100,
   angle = 0,
@@ -38,11 +40,11 @@ function Enemy:getY()
 end
 
 function Enemy:damage(health)
-  self.health = self.health - health
+  self.health = self.health - (health * self.modifier)
   if self.health <= 0 then
     self.dead = true
     self.health = 0
-    self.game:enemyKilled(10)
+    self.game:enemyKilled(10 * self.modifier)
     self.game:playSound('death')
   end
 end
@@ -52,7 +54,7 @@ function Enemy:slowdown(length)
 end
 
 function Enemy:calculatePath()
-  path = self.map:getPathToGoal(self:getX(), self:getY())
+  path = self.map:getPathToGoal(self:getX(), self:getY(), 2)
 
   if path then
     self.path = path._nodes
@@ -110,8 +112,8 @@ function Enemy:moveToTile(x, y, dt)
   end
 
   self.object:setLinearVelocity(
-    dt * speed * self.object:getMass() * vx,
-    dt * speed * self.object:getMass() * vy
+    dt * speed * vx,
+    dt * speed * vy
   )
 
   -- Calculate distance to the next point
@@ -152,10 +154,9 @@ function Enemy:draw()
     return
   end
 
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(self.colorMask)
 
-  love.graphics.draw(self.image, self.object:getX(), self.object:getY(), self.angle - math.pi / 2, 1, 1, 8, 8)
-
+  love.graphics.draw(self.image, self.object:getX(), self.object:getY(), self.angle - math.pi / 2, self.modifier, self.modifier, 8, 8)
 
   -- Draw paths
   if conf.drawPaths then
