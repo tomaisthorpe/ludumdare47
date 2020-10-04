@@ -73,6 +73,7 @@ function game:init()
     hit = love.audio.newSource('assets/hit.wav', 'static'),
     death = love.audio.newSource('assets/death.wav', 'static'),
     goal = love.audio.newSource('assets/laser.wav', 'static'),
+    spawn = love.audio.newSource('assets/spawn.wav', 'static'),
   }
 end
 
@@ -157,6 +158,7 @@ function game:spawnEnemyAt(spawner)
     spawner.x,
     spawner.y
   ))
+  self:playSound('spawn')
 end
 
 function game:addEntity(entity)
