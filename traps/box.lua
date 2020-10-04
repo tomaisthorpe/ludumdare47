@@ -16,6 +16,7 @@ local BoxTrap = Class{
   timer = 0,
   health = 100,
   dead = false,
+  isBox = true,
 }
 
 function BoxTrap:update(dt)

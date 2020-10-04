@@ -75,8 +75,8 @@ function Player:draw()
   love.graphics.setColor(1, 1, 1)
 
   local direction = -1
-  local mx = self.game:getMousePosition()
-  if mx > self:getX() then
+  local _, _, cx = self.game:getMousePosition()
+  if cx > self:getX() then
     direction = 1
   end
 

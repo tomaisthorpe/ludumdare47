@@ -21,7 +21,7 @@ local TrapSelector = Class{
       {
         name = 'Spikes!',
         class = SpikeTrap,
-        cost = 30,
+        cost = 45,
         description = 'Deals lots of damage, but has cooldown',
         image = love.graphics.newImage("assets/spike.png"),
         quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 256, 32),

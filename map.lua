@@ -193,6 +193,9 @@ function Map:heuristic(nodeA, nodeB)
   local dx = math.abs(nodeA._x - nodeB._x)
   local dy = math.abs(nodeA._y - nodeB._y)
 
+  local x = (nodeA._x - 1) * 16
+  local y = (nodeA._y - 1) * 16
+
   local weight = 1
   -- Is there a trap here?
   local colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'Trap'})
@@ -202,8 +205,7 @@ function Map:heuristic(nodeA, nodeB)
 
   colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'BoxTrap'})
   if #colliders > 0 then
-    -- print('box!')
-    weight = 200
+    weight = 100
   end
 
   weight = weight * ((math.random() + 1 / 2))

@@ -40,11 +40,11 @@ function Enemy:getY()
 end
 
 function Enemy:damage(health)
-  self.health = self.health - (health * self.modifier)
+  self.health = self.health - (health / self.modifier)
   if self.health <= 0 then
     self.dead = true
     self.health = 0
-    self.game:enemyKilled(10 * self.modifier)
+    self.game:enemyKilled(6 * self.modifier)
     self.game:playSound('death')
   end
 end

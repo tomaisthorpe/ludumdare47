@@ -9,9 +9,9 @@ local SpikeTrap = Class{
     self.image = love.graphics.newImage("assets/spike.png")
   end,
   __includes = Trap,
-  damage = 40,
+  damage = 25,
   lastTrigger = 0,
-  triggerRate = 5, -- How often this trap can trigger
+  triggerRate = 4, -- How often this trap can trigger
   fps = 20,
   frame = 0,
   timer = 0,

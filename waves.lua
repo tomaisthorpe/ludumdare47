@@ -13,12 +13,12 @@ local WaveController = Class{
 
     self.speedy = {
       modifier = 0.5,
-      speed = 1.5,
+      speed = 1.25,
       colorMask = {0, 1, 0},
     }
 
     self.big = {
-      modifier = 2,
+      modifier = 1.5,
       speed = 0.5,
       colorMask = {0, 0, 1},
     }
@@ -54,7 +54,7 @@ function WaveController:startWave(wave)
     end
   end
 
-  self.spawnRate = math.max(0.5, 2 / self.wave)
+  self.spawnRate = math.max(0.5, 2 - ((self.wave - 1) * 0.25))
 
   self.running = true
   self.lastSpawn = 0
