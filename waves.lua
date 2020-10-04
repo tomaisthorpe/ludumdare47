@@ -58,6 +58,30 @@ function WaveController:startWave(wave)
 
   self.running = true
   self.lastSpawn = 0
+  self:calculatePaths()
+end
+
+function WaveController:getPath(s)
+  local spawner = self.spawners[s]
+  return self.paths[s][math.random(#self.paths[s])]
+end
+
+function WaveController:calculatePaths()
+  self.paths = {}
+
+  for s, spawner in ipairs(self.spawners) do
+    local paths = {}
+    for i=1, 10, 1 do 
+
+      local x = spawner.x + spawner.width / 2
+      local y = spawner.y + spawner.height / 2
+
+      local path = self.game.map:getPathToGoal(x, y, 2)
+      table.insert(paths, path._nodes)
+    end
+
+    self.paths[s] = paths
+  end
 end
 
 function WaveController:update(dt)
@@ -72,7 +96,9 @@ function WaveController:update(dt)
 
     local spawner = math.random(1, math.min(self.wave, #self.spawners))
 
-    self.game:spawnEnemyAt(self.spawners[spawner], enemy.modifier, enemy.speed, enemy.colorMask)
+    local path = self:getPath(spawner)
+
+    self.game:spawnEnemyAt(self.spawners[spawner], enemy.modifier, enemy.speed, enemy.colorMask, path)
 
     self.spawnedEnemies = self.spawnedEnemies + 1
 

@@ -168,15 +168,16 @@ function game:startPhase(phase)
   end
 end
 
-function game:spawnEnemyAt(spawner, modifier, speedModifier, colorMask)
+function game:spawnEnemyAt(spawner, modifier, speedModifier, colorMask, path)
   table.insert(self.enemies, Enemy(
     self,
     self.map,
-    math.random(spawner.x + 16, spawner.x + spawner.width - 16),
-    math.random(spawner.y + 16, spawner.y + spawner.height - 16),
+    spawner.x + spawner.width / 2,
+    spawner.y + spawner.height / 2,
     modifier,
     speedModifier,
-    colorMask
+    colorMask,
+    path
   ))
   self:playSound('spawn')
 end

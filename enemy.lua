@@ -2,7 +2,7 @@ local Class = require 'hump.class'
 local conf = require 'conf'
 
 local Enemy = Class{
-  init = function(self, game, map, x, y, modifier, speedModifier, colorMask)
+  init = function(self, game, map, x, y, modifier, speedModifier, colorMask, path)
     self.game = game
     self.map = map
     self.world = map:getWorld()
