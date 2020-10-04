@@ -100,7 +100,7 @@ function Enemy:moveToTile(x, y, dt)
 
   -- Calculate distance to the next point
   local distance = math.sqrt(((goal_x - self:getX()) ^ 2) + ((goal_y - self:getY()) ^ 2))
-  if distance < 8 then
+  if distance < 16 then
     self.there = true
   end
 
@@ -117,7 +117,7 @@ function Enemy:update(dt)
   -- Check if they're near the goal
   local goal = self.map.goal
   local distance = math.sqrt(((goal.x - self:getX()) ^ 2) + ((goal.y - self:getY()) ^ 2))
-  if distance < 16 then
+  if distance <= 12 then
     self.game:removeLife()
     self.dead = true
   end

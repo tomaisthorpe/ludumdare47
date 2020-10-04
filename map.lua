@@ -3,6 +3,7 @@ local Class = require "hump.class"
 local JGrid = require "jumper.grid"
 local JPathfinder = require "jumper.pathfinder"
 
+local Goal = require "goal"
 local data = require "mapdata"
 
 local Map = Class{
@@ -125,10 +126,7 @@ function Map:updateObjects()
         end
 
         if object.type == "goal" then
-          self.goal = {
-            x = object.x,
-            y = object.y,
-          }
+          self.goal = Goal(object.x, object.y)
         end
       end
     end
@@ -284,6 +282,8 @@ function Map:update(dt)
       trap:update(dt)
     end
   end
+
+  self.goal:update(dt)
 end
 
 function Map:draw()
@@ -296,6 +296,8 @@ function Map:draw()
   for t=1, #self.traps, 1 do
     self.traps[t]:draw()
   end
+
+  self.goal:draw()
   
   -- Draw the cursor if applicable
   if self.cursor ~= nil then
