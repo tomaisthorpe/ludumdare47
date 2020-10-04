@@ -20,6 +20,10 @@ function Bullet:update(dt)
     self:destroy()
   end
 
+  if self.object:enter('BoxTrap') then
+    self:destroy()
+  end
+
   if self.object:enter(self.targetClass) then
     local collision = self.object:getEnterCollisionData(self.targetClass)
     local object = collision.collider:getObject()

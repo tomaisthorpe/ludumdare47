@@ -21,6 +21,7 @@ local Map = Class{
     self.world = wf.newWorld(0, 0, true)
     self.world:addCollisionClass('Solid')
     self.world:addCollisionClass('Trap')
+    self.world:addCollisionClass('BoxTrap')
     self.world:addCollisionClass('Bullet', {ignores={'Trap'}})
     self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
     self.world:addCollisionClass('Enemy', {ignores={'Trap', 'Enemy', 'Player'}})
@@ -194,9 +195,15 @@ function Map:heuristic(nodeA, nodeB)
 
   local weight = 1
   -- Is there a trap here?
-  colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'Trap'})
+  local colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'Trap'})
   if #colliders > 0 then
     weight = 100
+  end
+
+  colliders = self.world:queryRectangleArea(nodeA._x * 16, nodeA._y * 16, 32, 32, {'BoxTrap'})
+  if #colliders > 0 then
+    -- print('box!')
+    weight = 200
   end
 
   weight = weight * ((math.random() + 1 / 2))
@@ -211,7 +218,7 @@ function Map:canBuild(mx, my)
     -- Check this is a valid space
     if self:isFloor(x, y) and self:isFloor(x + 1, y) and self:isFloor(x, y + 1) and self:isFloor(x + 1, y + 1) then
       -- Check there's no trap here already
-      local colliders = self.world:queryRectangleArea(x * 16 + 1, y * 16 + 1, 30, 30, {'Trap'})
+      local colliders = self.world:queryRectangleArea(x * 16 + 1, y * 16 + 1, 30, 30, {'Trap', 'BoxTrap'})
       if #colliders == 0 then
 
         -- Check there isn't a trap exactly at this point
@@ -325,8 +332,12 @@ function Map:update(dt)
     self.cursor = nil
   end
 
-  for _, trap in ipairs(self.traps) do
-    trap:update(dt)
+  for i, trap in ipairs(self.traps) do
+    if trap.dead then
+      self:removeTrap(i)
+    else 
+      trap:update(dt)
+    end
   end
 
   self.goal:update(dt)

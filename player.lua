@@ -7,7 +7,7 @@ local Player = Class{
     self.world = world
   
     -- Create collider
-    self.object = world:newRectangleCollider(x - 11, y - 32, 22, 32)
+    self.object = world:newRectangleCollider(x - 11, y - 32, 22, 30)
     self.object:setCollisionClass('Player')
     self.object:setFixedRotation(true)
     self.object:setObject(self)

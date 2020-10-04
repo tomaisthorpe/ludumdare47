@@ -3,6 +3,7 @@ local Class = require 'hump.class'
 local AcidTrap = require 'traps.acid'
 local SpikeTrap = require 'traps.spike'
 local ShockTrap = require 'traps.shock'
+local BoxTrap = require 'traps.box'
 
 local TrapSelector = Class{
   init = function(self, game)
@@ -32,6 +33,14 @@ local TrapSelector = Class{
         description = 'Deals a small amount of damage and slows down the enemy',
         image = love.graphics.newImage("assets/shock.png"),
         quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 224, 32),
+      },
+      {
+        name = 'Box',
+        class = BoxTrap,
+        cost = 10,
+        description = 'Blocks the enemies path, they may attack it!',
+        image = love.graphics.newImage("assets/box.png"),
+        quad = love.graphics.newQuad(0, 0, 32, 32, 32, 32),
       },
     }
 
