@@ -7,16 +7,19 @@ local Player = Class{
     self.world = world
   
     -- Create collider
-    self.object = world:newRectangleCollider(x - 16, y - 32, 32, 32)
+    self.object = world:newRectangleCollider(x - 11, y - 32, 22, 32)
     self.object:setCollisionClass('Player')
     self.object:setFixedRotation(true)
     self.object:setObject(self)
     self.object:setLinearDamping(15)
+
+    self.image = love.graphics.newImage("assets/player.png")
   end,
   speed = 3000,
 
   fireRate = 0.2,
   lastShot = 0,
+  direction = -1,
 }
 
 function Player:getX() 
@@ -30,10 +33,12 @@ end
 function Player:update(dt)
   if love.keyboard.isDown('left') or love.keyboard.isDown('a') then
     self.object:applyForce(-self.speed * self.object:getMass(), 0)
+    self.direction = -1
   end
 
   if love.keyboard.isDown('right') or love.keyboard.isDown('d')  then
     self.object:applyForce(self.speed * self.object:getMass(), 0)
+    self.direction = 1
   end
 
   if love.keyboard.isDown('up') or love.keyboard.isDown('w') then
@@ -64,9 +69,9 @@ function Player:shoot()
 end
 
 function Player:draw()
-  love.graphics.setColor(1, 1, 0)
+  love.graphics.setColor(1, 1, 1)
 
-  love.graphics.rectangle('fill', self.object:getX() - 16, self.object:getY() - 16, 32, 32)
+  love.graphics.draw(self.image, self.object:getX() + 11 * self.direction, self.object:getY() - 16, 0, -self.direction, 1)
 end
 
 return Player

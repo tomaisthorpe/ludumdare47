@@ -13,6 +13,8 @@ local Enemy = Class{
     self.object:setFixedRotation(true)
     self.object:setObject(self)
     self.object:setLinearDamping(1)
+    
+    self.image = love.graphics.newImage("assets/enemy.png")
 
     self:calculatePath()
 
@@ -23,6 +25,7 @@ local Enemy = Class{
   speed = 60000,
   path = nil,
   health = 100,
+  angle = 0,
 }
 
 function Enemy:getX()
@@ -90,6 +93,8 @@ function Enemy:moveToTile(x, y, dt)
   local dy = goal_y - self:getY()
   local theta = math.atan2(dy, dx)
 
+  self.angle = theta
+
   local vx = math.cos(theta)
   local vy = math.sin(theta)
 
@@ -128,9 +133,10 @@ function Enemy:draw()
     return
   end
 
-  love.graphics.setColor(0, 0, 1)
+  love.graphics.setColor(1, 1, 1)
 
-  love.graphics.circle('fill', self.object:getX(), self.object:getY(), 8)
+  love.graphics.draw(self.image, self.object:getX(), self.object:getY(), self.angle - math.pi / 2, 1, 1, 8, 8)
+
 
   -- Draw paths
   if conf.drawPaths then
