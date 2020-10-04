@@ -15,6 +15,9 @@ conf = {
   gameOverShadowColor = {88 / 255, 29 / 255, 215 / 255},
 
   drawPaths = false,
+
+  slowdownEffect = 0.5,
+  slowdownLength = 5,
 }
 
 return conf

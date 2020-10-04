@@ -27,6 +27,7 @@ game = {
   images = {},
   activeTrap = nil,
   gameOver = false,
+  showCrosshair = false,
 }
 
 function game:calculateScaling()
@@ -58,6 +59,7 @@ function game:init()
 
   self.map = Map(self)
 
+  self.cursorCrosshair = love.graphics.newImage('assets/crosshair.png')
   self.camera = Camera(0, 0, 800, 600)
   self.camera:setFollowStyle('TOPDOWN_TIGHT')
   self.camera:setBounds(0, 0, self.map:getWidth(), self.map:getHeight())
@@ -148,6 +150,12 @@ function game:startPhase(phase)
   if phase == "defend" then
     self.waveSpawnComplete = false
     self.waveGen:startWave(self.wave)
+
+    love.mouse.setVisible(false)
+    self.showCrosshair = true
+  else
+    love.mouse.setVisible(true)
+    self.showCrosshair = false
   end
 end
 
@@ -259,6 +267,18 @@ function game:draw()
   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), game.translate[2])
   love.graphics.rectangle("fill", love.graphics.getWidth() - game.translate[1], 0, game.translate[1], love.graphics.getHeight())
   love.graphics.rectangle("fill", 0, love.graphics.getHeight() - game.translate[2], love.graphics.getWidth(), game.translate[2])
+
+  if self.showCrosshair then
+    love.graphics.push()
+    love.graphics.translate(game.translate[1], game.translate[2])
+    love.graphics.scale(game.scaling)
+
+    local mx, my = self:getMousePosition()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(self.cursorCrosshair, mx - 7 , my - 7)
+
+    love.graphics.pop()
+  end
 end
 
 function game:drawUI() 

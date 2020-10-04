@@ -26,6 +26,7 @@ local Enemy = Class{
   path = nil,
   health = 100,
   angle = 0,
+  slowdownLeft = 0,
 }
 
 function Enemy:getX()
@@ -44,6 +45,10 @@ function Enemy:damage(health)
     self.game:enemyKilled(20)
     self.game:playSound('death')
   end
+end
+
+function Enemy:slowdown(length)
+  self.slowdownLeft = length
 end
 
 function Enemy:calculatePath()
@@ -99,9 +104,14 @@ function Enemy:moveToTile(x, y, dt)
   local vx = math.cos(theta)
   local vy = math.sin(theta)
 
+  local speed = self.speed
+  if self.slowdownLeft > 0 then
+    speed = speed * conf.slowdownEffect
+  end
+
   self.object:setLinearVelocity(
-    dt * self.speed * self.object:getMass() * vx,
-    dt * self.speed * self.object:getMass() * vy
+    dt * speed * self.object:getMass() * vx,
+    dt * speed * self.object:getMass() * vy
   )
 
   -- Calculate distance to the next point
@@ -117,6 +127,13 @@ function Enemy:destroy()
 end
 
 function Enemy:update(dt)
+  if self.slowdownLeft > 0 then
+    self.slowdownLeft = self.slowdownLeft - dt
+    if self.slowdownLeft < 0 then
+      self.slowdownLeft = 0
+    end
+  end
+
   self:setTilePosition()
   self:move(dt)
 

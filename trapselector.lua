@@ -2,31 +2,41 @@ local Class = require 'hump.class'
 
 local AcidTrap = require 'traps.acid'
 local SpikeTrap = require 'traps.spike'
+local ShockTrap = require 'traps.shock'
 
 local TrapSelector = Class{
   init = function(self, game)
     self.game = game
 
+    self.traps = {
+      {
+        name = 'Acid',
+        class = AcidTrap,
+        cost = 20,
+        description = 'Damages enemies as long as they are stood on it',
+        image = love.graphics.newImage("assets/acid.png"),
+        quad = love.graphics.newQuad(0, 0, 32, 32, 1024, 32),
+      },
+      {
+        name = 'Spikes!',
+        class = SpikeTrap,
+        cost = 30,
+        description = 'Deals lots of damage, but has cooldown',
+        image = love.graphics.newImage("assets/spike.png"),
+        quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 256, 32),
+      },
+      {
+        name = 'Shocker',
+        class = ShockTrap,
+        cost = 30,
+        description = 'Deals a small amount of damage and slows down the enemy',
+        image = love.graphics.newImage("assets/shock.png"),
+        quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 224, 32),
+      },
+    }
+
     self:selectTrap(1)
   end,
-  traps = {
-    {
-      name = 'Acid',
-      class = AcidTrap,
-      cost = 20,
-      description = 'Damages enemies as long as they are stood on it',
-      image = love.graphics.newImage("assets/acid.png"),
-      quad = love.graphics.newQuad(0, 0, 32, 32, 1024, 32),
-    },
-    {
-      name = 'Spikes!',
-      class = SpikeTrap,
-      cost = 30,
-      description = 'Deals lots of damage, but has cooldown',
-      image = love.graphics.newImage("assets/spike.png"),
-      quad = love.graphics.newQuad(32 * 3, 0, 32, 32, 256, 32),
-    },
-  },
   currentTrap = 1,
   tooltip = nil,
 }
