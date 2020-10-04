@@ -50,8 +50,8 @@ function game:init()
   self.images.money = love.graphics.newImage("assets/money.png")
   self.images.lives = love.graphics.newImage("assets/lives.png")
   self.defaultFont = love.graphics.getFont()
-  self.font = love.graphics.newFont("assets/font.otf", 16)
-  self.fontLarge = love.graphics.newFont("assets/font.otf", 32)
+  self.font = love.graphics.newFont("assets/sharetech.ttf", 16)
+  self.fontLarge = love.graphics.newFont("assets/sharetech.ttf", 32)
   self.fontSmall = love.graphics.newFont("assets/veramono.ttf", 8)
 
   game:calculateScaling()
@@ -276,8 +276,8 @@ function game:drawUI()
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(self.images.button, self.startButton.x1, self.startButton.y1)
 
-    love.graphics.setFont(self.fontLarge)
-    love.graphics.printf("Start", self.startButton.x1, self.startButton.y1 + 8, 128, "center")
+    love.graphics.setFont(self.font)
+    love.graphics.printf("Start wave", self.startButton.x1, self.startButton.y1 + 14, 128, "center")
 
     self.trapselector:draw()
   end
