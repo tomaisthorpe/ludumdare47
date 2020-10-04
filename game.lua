@@ -67,6 +67,17 @@ function game:init()
   self.player = Player(self, self.map:getWorld(), playerStart.x, playerStart.y)
   self.waveGen = WaveGen(self, self.map.spawners)
   self.trapselector = TrapSelector(self)
+
+  self.sounds = {
+    shoot = love.audio.newSource('assets/shoot3.wav', 'static'),
+    hit = love.audio.newSource('assets/hit.wav', 'static'),
+    death = love.audio.newSource('assets/death.wav', 'static'),
+    goal = love.audio.newSource('assets/laser.wav', 'static'),
+  }
+end
+
+function game:playSound(name)
+  self.sounds[name]:play()
 end
 
 function game:resize()

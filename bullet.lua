@@ -1,7 +1,8 @@
 local Class = require 'hump.class'
 
 local Bullet =  Class{
-  init = function(self, world, x, y, theta)
+  init = function(self, game, world, x, y, theta)
+    self.game = game
     self.object = world:newCircleCollider(x, y, 2)
     self.object:setLinearVelocity(math.cos(theta) * 500, math.sin(theta) * 500)
     self.object:setAngle(theta)
@@ -24,6 +25,8 @@ function Bullet:update(dt)
     local object = collision.collider:getObject()
 
     object:damage(self.damage)
+
+    self.game:playSound('hit')
 
     self:destroy()
   end

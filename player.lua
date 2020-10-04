@@ -64,8 +64,10 @@ function Player:shoot()
   local dy = cy - self:getY()
   local theta = math.atan2(dy, dx)
 
-  local bullet = Bullet(self.world, self:getX(), self:getY(), theta)
+  local bullet = Bullet(self.game, self.world, self:getX(), self:getY(), theta)
   self.game:addEntity(bullet)
+
+  self.game:playSound('shoot')
 end
 
 function Player:draw()

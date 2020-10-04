@@ -42,6 +42,7 @@ function Enemy:damage(health)
     self.dead = true
     self.health = 0
     self.game:enemyKilled(20)
+    self.game:playSound('death')
   end
 end
 
@@ -124,6 +125,7 @@ function Enemy:update(dt)
   local distance = math.sqrt(((goal.x - self:getX()) ^ 2) + ((goal.y - self:getY()) ^ 2))
   if distance <= 12 then
     self.game:removeLife()
+    self.game:playSound('goal')
     self.dead = true
   end
 end
