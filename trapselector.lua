@@ -1,6 +1,6 @@
 local Class = require 'hump.class'
 
-local SlimeTrap = require 'traps.slime'
+local AcidTrap = require 'traps.acid'
 local SpikeTrap = require 'traps.spike'
 
 local TrapSelector = Class{
@@ -11,8 +11,8 @@ local TrapSelector = Class{
   end,
   traps = {
     {
-      name = 'Slime?',
-      class = SlimeTrap,
+      name = 'Acid',
+      class = AcidTrap,
       cost = 20,
       description = 'Damages enemies as long as they are stood on it',
     },

@@ -22,10 +22,11 @@ game = {
   },
   wave = 1,
   waveSpawnComplete = false,
-  lives = 10,
+  lives = 1,
   money = 1000,
   images = {},
-  activeTrap = nil
+  activeTrap = nil,
+  gameOver = false,
 }
 
 function game:calculateScaling()
@@ -77,12 +78,17 @@ function game:keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
+
+  if key == "space" and self.gameOver then
+    love.event.quit()
+  end
 end
 
 function game:removeLife()
   self.lives = self.lives - 1
-  if self.lives < 0 then
+  if self.lives <= 0 then
     self.lives = 0
+    self.gameOver = true
   end
 end
 
@@ -151,6 +157,10 @@ function game:waveComplete()
 end
 
 function game:update(dt)
+  if self.gameOver then
+    return
+  end
+
   self.map:update(dt)
   self.player:update(dt)
 
@@ -281,5 +291,22 @@ function game:drawUI()
   love.graphics.printf(self.money, 648, 10, 100, "right")
   love.graphics.setColor(conf.moneyColor)
   love.graphics.printf(self.money, 648, 8, 100, "right")
+
+  if self.gameOver then
+    love.graphics.setFont(self.fontLarge)
+    love.graphics.setColor(conf.gameOverShadowColor)
+    love.graphics.printf("Game Over!", 0, 302, 800, "center")
+
+    love.graphics.setColor(conf.gameOverColor)
+    love.graphics.printf("Game Over!", 0, 300, 800, "center")
+
+    love.graphics.setFont(self.fontSmall)
+    love.graphics.setColor(0.5, 0.5, 0.5)
+    love.graphics.printf("Press space to quit.", 0, 336, 800, "center")
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf("Press space to quit.", 0, 335, 800, "center")
+  end
+
   love.graphics.pop()
 end

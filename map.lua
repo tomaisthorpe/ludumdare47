@@ -23,7 +23,7 @@ local Map = Class{
     self.world:addCollisionClass('Trap')
     self.world:addCollisionClass('Bullet', {ignores={'Trap'}})
     self.world:addCollisionClass('Player', {ignores={'Trap', 'Bullet'}})
-    self.world:addCollisionClass('Enemy', {ignores={'Trap'}})
+    self.world:addCollisionClass('Enemy', {ignores={'Trap', 'Enemy'}})
 
     -- self.world:setQueryDebugDrawing(true)
 
@@ -277,10 +277,10 @@ function Map:update(dt)
     end
   else
     self.cursor = nil
+  end
 
-    for _, trap in ipairs(self.traps) do
-      trap:update(dt)
-    end
+  for _, trap in ipairs(self.traps) do
+    trap:update(dt)
   end
 
   self.goal:update(dt)
