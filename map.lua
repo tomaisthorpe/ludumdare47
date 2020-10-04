@@ -205,8 +205,16 @@ function Map:canBuild(mx, my)
     -- Check this is a valid space
     if self:isFloor(x, y) and self:isFloor(x + 1, y) and self:isFloor(x, y + 1) and self:isFloor(x + 1, y + 1) then
       -- Check there's no trap here already
-      colliders = self.world:queryRectangleArea(x * 16 + 1, y * 16 + 1, 30, 30, {'Trap'})
+      local colliders = self.world:queryRectangleArea(x * 16 + 1, y * 16 + 1, 30, 30, {'Trap'})
       if #colliders == 0 then
+
+        -- Check there isn't a trap exactly at this point
+        -- The above doesn't work for some reason
+        for _, trap in ipairs(self.traps) do
+          if trap:getX() - 16 == x * 16 and trap:getY() - 16 == y * 16 then
+            return false
+          end
+        end
         return true
       end
 
