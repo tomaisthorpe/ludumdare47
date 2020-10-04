@@ -28,7 +28,7 @@ end
 
 function Trap:update(dt)
   -- Check if we are colliding with any enemies
-  local colliders = self.world:queryRectangleArea(self:getX(), self:getY(), 32, 32, {'Enemy'})
+  local colliders = self.world:queryRectangleArea(self:getX() - 16, self:getY() - 16, 32, 32, {'Enemy'})
   if #colliders > 0 then
     local enemies = {}
     for _, collider in ipairs(colliders) do
